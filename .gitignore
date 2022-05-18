@@ -1,0 +1,3 @@
+*.amlignore
+*.ipython_*/*.*
+*.amltmp
