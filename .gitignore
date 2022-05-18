@@ -1,5 +1,5 @@
 *.amlignore
-*.ipython_*/*.*
+*.ipynb_*/*.*
 *.amltmp
 automl_errors.log
 .ipynb_aml_checkpoints
