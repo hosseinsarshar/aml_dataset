@@ -2,3 +2,5 @@
 *.ipython_*/*.*
 *.amltmp
 automl_errors.log
+.ipynb_aml_checkpoints
+.ipynb_checkpoints
