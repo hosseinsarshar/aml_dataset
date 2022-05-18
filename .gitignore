@@ -1,3 +1,4 @@
 *.amlignore
 *.ipython_*/*.*
 *.amltmp
+automl_errors.log
