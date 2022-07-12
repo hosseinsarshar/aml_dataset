@@ -1,0 +1,30 @@
+2022-07-12 14:10:48.585 - INFO - 9630 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 14:10:48.666 - INFO - 9630 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 15:15:26.102 - INFO - 9630 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 15:15:26.191 - INFO - 9630 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 15:18:41.031 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 15:18:41.122 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 15:25:39.077 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 15:25:39.161 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:18:19.401 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:18:19.518 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:20:55.103 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:20:55.197 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:21:25.025 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:21:25.109 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:23:49.393 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:23:49.506 - INFO - 20887 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:26:43.354 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:26:43.444 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:54:18.295 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:54:18.395 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 16:54:34.951 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 16:54:35.031 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 17:26:28.193 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 17:26:28.538 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 18:06:17.288 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 18:06:17.386 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 18:08:00.370 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 18:08:00.443 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.
+2022-07-12 18:26:51.564 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:124 - Start data validation.
+2022-07-12 18:26:53.408 - INFO - 12543 - azureml.train.automl._experiment_drivers.driver_utilities.validate_input:137 - Validation service found the data has no errors.

@@ -15,6 +15,7 @@ from sklearn.compose import make_column_transformer
 from sklearn.linear_model import LogisticRegression
 from azureml.core.model import Model
 from azureml.core.resource_configuration import ResourceConfiguration
+# from interpret.ext.blackbox import TabularExplainer
 
 from azureml.core import Dataset, Run
 from packaging.version import Version
@@ -55,12 +56,19 @@ if __name__ == "__main__":
     print('run.input_datasets')
     print(run.input_datasets)
 
-    print('args.data_folder')
-    print(args.data_folder)
+    # print('args.data_folder')
+    # print(args.data_folder)
 
     dataset = run.input_datasets['output']
     print("type(dataset)")
     print(type(dataset))
+    
+    print('dataset')
+    print(dataset)
+    
+    pdf_dataset = dataset.to_pandas_dataframe()
+    print("pdf_dataset.head()")
+    print(pdf_dataset.head())
 
     print('os.listdir(dataset)')
     print(os.listdir(dataset))
@@ -75,7 +83,7 @@ if __name__ == "__main__":
     X_features, y_train = featurize_data(preped_data)
 
     log_reg = LogisticRegression(solver='liblinear')
-    log_reg.fit(X_features, y_train)
+    fitted_model = log_reg.fit(X_features, y_train)
 
     model_file_name = 'titanic.pkl'
     file_path = os.path.join('./outputs/', model_file_name)
@@ -83,7 +91,7 @@ if __name__ == "__main__":
     os.makedirs('./outputs/', exist_ok=True)
     # save model in the outputs folder so it automatically get uploaded
     with open(model_file_name, "wb") as file:
-        joblib.dump(value=log_reg, filename=file_path)
+        joblib.dump(value=fitted_model, filename=file_path)
 
     ws = run.experiment.workspace
 
@@ -93,6 +101,12 @@ if __name__ == "__main__":
                             model_name=args.model_name,
                             datasets=[('featurized data', ds_feature)],
                             tags={'run_id': parent_id},
-                            description="Ridge regression model to predict diabetes",
+                            description="Titanic survival classification model",
                             resource_configuration=ResourceConfiguration(cpu=1, memory_in_gb=0.5),
                             workspace=ws)
+
+    # explainer = TabularExplainer(fitted_model, 
+    #                              X_features, 
+    #                              features=breast_cancer_data.feature_names, 
+    #                              classes=classes)
+

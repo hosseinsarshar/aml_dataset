@@ -14,6 +14,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OrdinalEncoder
 from sklearn.compose import make_column_transformer
+from sklearn.model_selection import train_test_split
 
 from azureml.core import Run, Datastore
 from azureml.core import Datastore, Dataset
@@ -42,9 +43,11 @@ def populate_environ():
     parser.add_argument("--feature_set_2", type=str, help="input feature set")
     parser.add_argument("--feature_set_3", type=str, help="input feature set")
     
-    parser.add_argument("--output", type=str, help="output_extract directory")
-    parser.add_argument("--output_datastore_name", type=str, help="output_extract directory")
-    parser.add_argument("--output_feature_set_name", type=str, help="output_extract directory")
+    parser.add_argument("--output_train", type=str, help="output_train directory")
+    parser.add_argument("--output_test", type=str, help="output_test directory")
+    parser.add_argument("--output_datastore_name", type=str, help="output_datastore_name directory")
+    parser.add_argument("--output_train_feature_set_name", type=str, help="output_train_feature_set_name directory")
+    parser.add_argument("--output_test_feature_set_name", type=str, help="output_test_feature_set_name directory")
 
     (args, extra_args) = parser.parse_known_args()
     os.environ['AZUREML_RUN_TOKEN'] = args.AZUREML_RUN_TOKEN
@@ -68,7 +71,7 @@ def prep_data(data):
     data_train['Age'] = data_train['Age'].fillna(data_train['Age'].mean())
     return data_train
 
-def register_output_dataset(ws, output_datastore_name, output):
+def register_output_dataset(ws, output_datastore_name, output, pdf_feature_data, output_feature_set_name):
   datastore = Datastore(ws, output_datastore_name)
 
   relative_path_on_datastore = "/azureml/" + output.split('/azureml/')[1] + '/*.parquet'
@@ -78,7 +81,7 @@ def register_output_dataset(ws, output_datastore_name, output):
   dataset = Dataset.Tabular.from_parquet_files(path = [(datastore, relative_path_on_datastore)])
 
   # Registering Dataset
-  preped_data_dtypes = preped_data.dtypes.apply(lambda x: x.name).to_dict()
+  preped_data_dtypes = pdf_feature_data.dtypes.apply(lambda x: x.name).to_dict()
 
   now = datetime.now()
   dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -89,7 +92,7 @@ def register_output_dataset(ws, output_datastore_name, output):
                     
   tag = {'input_datasets': input_datasets,
           'regisitered_at': dt_string,
-          'delta_feature_name': f'features.{args.output_feature_set_name}',
+          'delta_feature_name': f'features.{output_feature_set_name}',
           'run_id': run.parent.id,
           'dtypes': preped_data_dtypes}
 
@@ -97,14 +100,14 @@ def register_output_dataset(ws, output_datastore_name, output):
   print(tag)
 
   dataset = dataset.register(workspace=ws, 
-                                  name=args.output_feature_set_name, 
-                                  description=f'{args.output_feature_set_name} featurized data',
+                                  name=output_feature_set_name, 
+                                  description=f'{output_feature_set_name} featurized data',
                                   tags=tag,
                                   create_new_version=True)
 
   return dataset
 
-def register_at_databricks_featurestore(output_feature_set_name):
+def register_at_databricks_featurestore(output_feature_set_name, df_feature):
   spark.sql("CREATE SCHEMA IF NOT EXISTS features")
 
   fs = FeatureStoreClient()
@@ -114,7 +117,7 @@ def register_at_databricks_featurestore(output_feature_set_name):
   feature_table = fs.create_table(
     name=f'features.{output_feature_set_name}',
     primary_keys='id',
-    schema=df_all.schema,
+    schema=df_feature.schema,
     description=f'{output_feature_set_name} featurized data'
   )
 
@@ -122,7 +125,7 @@ def register_at_databricks_featurestore(output_feature_set_name):
 
   fs.write_table(
     name=f'features.{output_feature_set_name}',
-    df = df_all,
+    df = df_feature,
     mode = 'overwrite'
   )
 
@@ -135,8 +138,14 @@ if __name__ == "__main__":
   run = Run.get_context(allow_offline=False)
   print(run.parent.id)
 
-  print("output", args.output)
-  print("output_feature_set_name", args.output_feature_set_name)
+  # print("output", args.output)
+  # print("output_feature_set_name", args.output_feature_set_name)
+    
+  print("output_train", args.output_train)
+  print("output_test", args.output_test)
+    
+  print("output_train_feature_set_name", args.output_train_feature_set_name)
+  print("output_test_feature_set_name", args.output_test_feature_set_name)
 
   ws = run.experiment.workspace
 
@@ -166,15 +175,26 @@ if __name__ == "__main__":
 
   # adding a unique ID to meet Databricks Feature Store requirement
   preped_data['id'] = preped_data.apply(lambda _: uuid.uuid4().hex, axis=1)
+    
+  X_train, X_test, y_train, y_test = train_test_split(
+    preped_data.drop('Survived', axis=1), preped_data['Survived'], stratify=preped_data['Survived'],
+    shuffle=True, test_size=0.2, random_state=42)
 
-  df_all = spark.createDataFrame(preped_data)
+  X_train['Survived'] = y_train
+  X_test['Survived'] = y_test
+
+  df_train = spark.createDataFrame(X_train)
+  df_test = spark.createDataFrame(X_test)
 
   # Save the dataframe as a Parquet table
 
-  print("Savind df_all")
-  df_all.write.parquet(args.output)
-  print("df_all saved")
+  print("Savind df_train and df_test")
+  df_train.write.parquet(args.output_train)
+  df_test.write.parquet(args.output_test)
+  print("df_train and df_test saved")
 
-  dataset = register_output_dataset(ws, args.output_datastore_name, args.output)
+  dataset_train = register_output_dataset(ws, args.output_datastore_name, args.output_train, X_train, args.output_train_feature_set_name)
+  dataset_test = register_output_dataset(ws, args.output_datastore_name, args.output_test, X_test, args.output_test_feature_set_name)
 
-  register_at_databricks_featurestore(args.output_feature_set_name)
+  register_at_databricks_featurestore(args.output_train_feature_set_name, df_train)
+  register_at_databricks_featurestore(args.output_test_feature_set_name, df_test)
