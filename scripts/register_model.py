@@ -47,7 +47,7 @@ ds_feature_test = Dataset.get_by_name(ws, name=args.featureset_name_test)
 model = Model.register(workspace=ws, 
                        datasets=[('featurized training data', ds_feature_train), ('featurized test data', ds_feature_test)], 
                        tags={'run_id': parent_id},
-                       description="Titanic survival classification model",
+                       description="Trained Model",
                        model_name=args.model_name, 
                        resource_configuration=ResourceConfiguration(cpu=1, memory_in_gb=0.5),
                        model_path=model_output_dir)
